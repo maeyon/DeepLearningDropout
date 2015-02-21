@@ -40,7 +40,7 @@ opt.gaussian = false;
 % opt.alpha, opt.batchSize, opt.numEpochs, opt.input_do_rate, opt.hidden_do_rate, errors_d2(opt.numEpochs)));
 
 
-opt.adaptive = true;
+opt.adaptive = false;%true;
 
 opt.input_do_rate = 0.5:0.0025:1.0;
 opt.hidden_do_rate = opt.input_do_rate;
