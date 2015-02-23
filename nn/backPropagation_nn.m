@@ -2,11 +2,19 @@ function net = backPropagation_nn(net, y, opt)
 numLayers = length(net.layers);
 
 e = net.layers{numLayers}.a - y; % Total error
-net.L = 1/2* sum(e(:) .^ 2) / size(e, 2); % Mean-squared loss for future checking
+
 if opt.regression
-    net.layers{numLayers}.d = e;
-else
     net.layers{numLayers}.d = e .* (net.layers{numLayers}.a .* (1 - net.layers{numLayers}.a));
+    net.L = 1/2* sum(e(:) .^ 2) / size(e, 2); % Mean-squared loss for future checking
+else
+    net.layers{numLayers}.d = e;
+    logy = log(net.layers{numLayers}.a);
+    log1_y = log(1-net.layers{numLayers}.a);
+    net.L = 0;
+    for i = 1:size(y,1)
+        net.L = net.L - y(i,:)*logy(i,:)' - (1-y(i,:))*log1_y(i,:)'; % Cross entropy
+    end
+    net.L = net.L/size(e, 2);
 end
 
 % Compute delta values for each layer

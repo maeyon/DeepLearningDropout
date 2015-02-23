@@ -54,7 +54,10 @@ function net = train_nn(net, x, y, test_x, test_y, opt)
                 net.testErrors = er;
             end
             if strcmp(opt.testerror_dropout, 'last')
-                [erd, badd] = testerror_dropout(net, test_x, test_y, opt.input_do_rate(i), opt.hidden_do_rate(i), 100, opt.regression);
+                if ~isfield(opt,'numTestEpochs')
+                    opt.numTestEpochs=100;
+                end
+                [erd, badd] = testerror_dropout(net, test_x, test_y, opt.input_do_rate(i), opt.hidden_do_rate(i), opt.numTestEpochs, opt.regression);
                 net.testErrorsDropout = erd;
             end
             if strcmp(opt.trainingerror, 'last')
@@ -66,7 +69,10 @@ function net = train_nn(net, x, y, test_x, test_y, opt)
             net.testErrors(i) = er;
         end
         if strcmp(opt.testerror_dropout, 'all')
-            [erd, badd] = testerror_dropout(net, test_x, test_y, opt.input_do_rate(i), opt.hidden_do_rate(i), 100, opt.regression);
+            if ~isfield(opt,'numTestEpochs')
+                opt.numTestEpochs=100;
+            end
+            [erd, badd] = testerror_dropout(net, test_x, test_y, opt.input_do_rate(i), opt.hidden_do_rate(i), opt.numTestEpochs, opt.regression);
             net.testErrorsDropout(i) = erd;
         end
         if strcmp(opt.trainingerror, 'all')

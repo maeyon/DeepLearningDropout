@@ -1,7 +1,7 @@
 function net = feedForward_nn(net, x, opt, epochNum)
 
-	numLayers = length(net.layers); % total number of layers
-	net.layers{1}.a = x;
+  numLayers = length(net.layers); % total number of layers
+  net.layers{1}.a = x;
   ido = opt.input_do_rate(epochNum);
   hdo = opt.hidden_do_rate(epochNum);
   if opt.boundedrandom

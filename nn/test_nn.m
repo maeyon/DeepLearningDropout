@@ -4,7 +4,10 @@ function [testErrors, trainingErrors, testErrorsDropout] = test_nn(opt);
     load(opt.dataset);
     %% 
 
-    rand('state',0)
+    if ~isfield(opt,'randstate')
+        opt.randstate=0;
+    end
+    rand('state',opt.randstate)
 
     nn.layers = opt.layers;
 
@@ -24,7 +27,7 @@ function [testErrors, trainingErrors, testErrorsDropout] = test_nn(opt);
     else
         testErrors = [];
     end
-    if strcmp(opt.testerror_dropout, 'all') || strcmp(opt.testerror, 'last')
+    if strcmp(opt.testerror_dropout, 'all') || strcmp(opt.testerror_dropout, 'last')
         testErrorsDropout = nn.testErrorsDropout;
     else
         testErrorsDropout = [];

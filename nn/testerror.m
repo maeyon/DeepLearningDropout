@@ -4,9 +4,6 @@ function [er, bad] = testerror(net, x, y, do_regression)
     end
     %  feedforward
     if do_regression
-    else
-    end
-    if do_regression
       net = feedForward_test_nn_regression(net, x, 1, 1);
       h = net.layers{end}.a;
       a = y;

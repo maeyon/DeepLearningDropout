@@ -14,7 +14,7 @@ function opt = initializeOptions()
   opt.dropconnect = false;
   opt.boundedrandom = false;
   opt.dataset = '../data/gisette.mat';
-  opt.regression = false;
+  opt.regression = false; % 
     %../data/magic04.mat
     %../data/shuttle.mat
     %../data/letterrecognition.mat
