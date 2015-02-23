@@ -22,9 +22,15 @@ function [er, bad] = testerror_dropout(net, x, y, ido, hdo, numTestEpochs, do_re
       bad = [];
       er = mean((est-real).^2);
     else
-      [~, est] = max(a,[],1);
-      [~, real] = max(y,[],1);
-      bad = find(est ~= real);
-      er = numel(bad) / size(y, 2);
+        if size(a,1) == 1
+          h = (a > 0.5);
+          bad = find(h ~= y);
+          er = numel(bad) / size(y, 2);
+        else
+          [~, est] = max(a,[],1);
+          [~, real] = max(y,[],1);
+          bad = find(est ~= real);
+          er = numel(bad) / size(y, 2);
+        end
     end
 end

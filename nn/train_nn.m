@@ -1,6 +1,6 @@
 function net = train_nn(net, x, y, test_x, test_y, opt)
 
-    %Vectorize
+    % Vectorize
     if length(opt.input_do_rate) == 1
         opt.input_do_rate = ones(opt.numEpochs, 1) * opt.input_do_rate;
     end
@@ -43,7 +43,7 @@ function net = train_nn(net, x, y, test_x, test_y, opt)
             batch_y = y(:, kk((l - 1) * opt.batchSize + 1 : l * opt.batchSize));
 
             net = feedForward_nn(net, batch_x, opt, i);
-            net = backPropagation_nn(net, batch_y, opt);
+            net = backPropagation_nn(net, batch_y, opt, i);
             meanTrainingError = meanTrainingError + net.L;
         end
         meanTrainingError = meanTrainingError / numBatches;
@@ -84,6 +84,5 @@ function net = train_nn(net, x, y, test_x, test_y, opt)
 %      for l = 3:length(net.layers)
 %          net.layers{l}.w = net.layers{l}.w * opt.hidden_do_rate;
 %      end
-    
     
 end

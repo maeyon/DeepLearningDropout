@@ -1,4 +1,4 @@
-function [testErrors, trainingErrors, testErrorsDropout] = test_nn(opt);
+function [testErrors, trainingErrors, testErrorsDropout,nn] = test_nn(opt);
 
     %%
     load(opt.dataset);
@@ -19,6 +19,8 @@ function [testErrors, trainingErrors, testErrorsDropout] = test_nn(opt);
     train_x = reshape(train_x, size(train_x,1), size(train_x,3));
     test_x = reshape(test_x, size(test_x,1), size(test_x,3));
     
+%     nn = setup_nn(nn, train_x, train_y(1,:));
+%     nn = train_nn(nn, train_x, train_y(1,:), test_x, test_y(1,:), opt);
     nn = setup_nn(nn, train_x, train_y);
     nn = train_nn(nn, train_x, train_y, test_x, test_y, opt);
     

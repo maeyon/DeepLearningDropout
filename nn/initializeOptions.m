@@ -19,6 +19,7 @@ function opt = initializeOptions()
     %../data/shuttle.mat
     %../data/letterrecognition.mat
     %../data/mnist_uint8.mat
+    
   
   opt.testerror = 'all'; %Regular testing, 'all' to calculate on all epochs,
                          %'last' for last epoch only

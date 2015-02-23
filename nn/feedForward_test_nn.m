@@ -1,9 +1,9 @@
 function net = feedForward_test_nn(net, x, input_do_rate, hidden_do_rate, dropout)
 % Instead of dropping out nodes, each weight is multiplied by the dropout
 % rate. To be used on test data.
-	if nargin < 5
+    if nargin < 5
         dropout = false;
-  end
+    end
 
 
 	numLayers = length(net.layers); % total number of layers

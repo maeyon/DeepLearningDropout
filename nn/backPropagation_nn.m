@@ -1,4 +1,4 @@
-function net = backPropagation_nn(net, y, opt)
+function net = backPropagation_nn(net, y, opt, epochNum)
 numLayers = length(net.layers);
 
 e = net.layers{numLayers}.a - y; % Total error
@@ -32,11 +32,22 @@ for l = (numLayers - 1) : -1 : 1
 end
 
 % Perform gradient descent, no weights for max-pooling layer
-for l = 2 : numLayers
-    net.layers{l}.b = net.layers{l}.b - opt.alpha * sum(net.layers{l}.d,2) / size(net.layers{l}.d,2);
-    net.layers{l}.w = net.layers{l}.w - opt.alpha * net.layers{l}.d * net.layers{l - 1}.a' / size(net.layers{l}.d,2);
-    if opt.dropconnect
-        net.layers{l}.wdc = net.layers{l}.w .* net.layers{l-1}.dc;
+if opt.adaptive_alpha
+    for l = 2 : numLayers
+        alpha = opt.alpha_a/(opt.alpha_b + epochNum);
+        net.layers{l}.b = net.layers{l}.b - alpha * sum(net.layers{l}.d,2) / size(net.layers{l}.d,2);
+        net.layers{l}.w = net.layers{l}.w - alpha * net.layers{l}.d * net.layers{l - 1}.a' / size(net.layers{l}.d,2);
+        if opt.dropconnect
+            net.layers{l}.wdc = net.layers{l}.w .* net.layers{l-1}.dc;
+        end
+    end
+else
+    for l = 2 : numLayers
+        net.layers{l}.b = net.layers{l}.b - opt.alpha * sum(net.layers{l}.d,2) / size(net.layers{l}.d,2);
+        net.layers{l}.w = net.layers{l}.w - opt.alpha * net.layers{l}.d * net.layers{l - 1}.a' / size(net.layers{l}.d,2);
+        if opt.dropconnect
+            net.layers{l}.wdc = net.layers{l}.w .* net.layers{l-1}.dc;
+        end
     end
 end
 

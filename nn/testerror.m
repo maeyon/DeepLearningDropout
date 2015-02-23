@@ -10,10 +10,17 @@ function [er, bad] = testerror(net, x, y, do_regression)
       bad = [];
       er = mean((h-a).^2);
     else
-      net = feedForward_test_nn(net, x, 1, 1);
-      [~, h] = max(net.layers{end}.a, [], 1);
-      [~, a] = max(y, [], 1);
-      bad = find(h ~= a);
-      er = numel(bad) / size(y, 2);
+        if size(net.layers{end}.a,1) == 1
+          net = feedForward_test_nn(net, x, 1, 1);
+          h = (net.layers{end}.a > 0.5);
+          bad = find(h ~= y);
+          er = numel(bad) / size(y, 2);
+        else
+          net = feedForward_test_nn(net, x, 1, 1);
+          [~, h] = max(net.layers{end}.a, [], 1);
+          [~, a] = max(y, [], 1);
+          bad = find(h ~= a);
+          er = numel(bad) / size(y, 2);
+        end
     end
 end
