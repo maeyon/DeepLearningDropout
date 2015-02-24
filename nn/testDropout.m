@@ -5,25 +5,53 @@
 addpath ../util;
 
 opt = initializeOptions();
-% opt.alpha = 1;
-opt.adaptive_alpha = true;
-opt.alpha_a = 1;
-opt.alpha_b = 0;
+opt.alpha = 1;
+opt.adaptive_alpha = true;%false;%true;
+opt.alpha_a = 2e4;%50;%10;%1;
+opt.alpha_b = 1e4;
+
 opt.batchSize = 10;
 opt.numEpochs = 201;
 opt.numTestEpochs = 1e4;%1e2;%
-opt.testerror_dropout = 'last';%[];%
+opt.testerror_dropout = [];%'last';%
  
 opt.dropout = true;
 opt.gaussian = false;
+opt.adaptive = false;% this is NOT opt.adaptive_alpha
 
-opt.adaptive = false;%true;
+opt.input_do_rate = 0.8; % Probability to set the mask 1 (use the variable)
+opt.hidden_do_rate = 0.5;% Probability to set the mask 1 (use the variable)
+% 'UOR'(uniformly optimized rate dropout), 
+% 'LOR'(layer-wise optimized rate dropout) 
+% 'FOR'(feature-wise optimized rate dropout) 
 
-opt.input_do_rate = 0.5;
-opt.hidden_do_rate = 0.5;%opt.input_do_rate;
 tic;
-[errors_d1, trainingErrors, testErrorsDropout] = test_nn(opt);
-% errors_d1 = test_nn(opt);
+opt.Bayesian_do = [];%'UOR';%
+nn = test_nn(opt);
 toc;
+figure(1);hold off;plot(nn.testErrors)
+tic;
+opt.Bayesian_do = 'UOR';%
+nn = test_nn(opt,nn);
+toc;
+figure(2);hold off;plot(nn.testErrors)
+
+
+if strcmp(opt.testerror, 'all') || strcmp(opt.testerror, 'last')
+    testErrors = nn.testErrors;
+else
+    testErrors = [];
+end
+if strcmp(opt.testerror_dropout, 'all') || strcmp(opt.testerror_dropout, 'last')
+    testErrorsDropout = nn.testErrorsDropout;
+else
+    testErrorsDropout = [];
+end
+if strcmp(opt.trainingerror, 'all') || strcmp(opt.trainingerror, 'last')
+    trainingErrors = nn.trainingErrors;
+else
+    trainingErrors = [];
+end
+
 disp(sprintf('alpha: %d batchSize: %d numEpochs: %d error: %d',...
 opt.alpha, opt.batchSize, opt.numEpochs, errors_d1(opt.numEpochs)));

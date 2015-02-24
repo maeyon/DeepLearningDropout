@@ -118,8 +118,9 @@ function net = train_nn(net, x, y, test_x, test_y, opt)
                     net.trainingErrors = meanTrainingError;
                 end
             else
-                net.trainingErrors(i) = meanTrainingError;
+                net.trainingErrors = meanTrainingError;
             end
+            net.trainingErrors(i) = meanTrainingError;
         end
     end
     

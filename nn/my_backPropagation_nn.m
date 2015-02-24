@@ -1,6 +1,6 @@
-function net = backPropagation_nn(net, y, opt, epochNum)
+function net = my_backPropagation_nn(net, y, opt)
+epochNum = net.iter;
 numLayers = length(net.layers);
-
 e = net.layers{numLayers}.a - y; % Total error
 
 if opt.regression
@@ -49,6 +49,38 @@ else
             net.layers{l}.wdc = net.layers{l}.w .* net.layers{l-1}.dc;
         end
     end
+end
+
+if isfield(opt, 'Bayesian_do')
+    ido = sig(net.layers{1}.lambda);% opt.input_do_rate(epochNum);
+    for l = 2:length(net.layers)-1
+      hdo{l} = sig(net.layers{l}.lambda);%opt.hidden_do_rate(epochNum);
+    end
+    
+    %%%%%%%%%%%%%%% update dropout rate in input layer 
+    grad = 0;
+    if strcmp(opt.Bayesian_do, 'UOR')
+        grad = mean(sum(net.layers{1}.do,1) -  ido)*net.L - net.delta*(ido.*(1-ido).*(log(1-ido)-log(ido)));
+    end
+    
+    if opt.adaptive_alpha
+        net.layers{1}.lambda = net.layers{1}.lambda - alpha*grad;
+    else
+        net.layers{1}.lambda = net.layers{1}.lambda - opt.alpha*grad;
+    end
+    
+    for l = 2:length(net.layers)-1
+        if strcmp(opt.Bayesian_do, 'UOR')
+            grad = mean(sum(net.layers{l}.do,1) -  ido)*net.L - net.delta*(hdo{l}.*(1-hdo{l}).*(log(1-hdo{l})-log(hdo{l})));
+        end
+
+        if opt.adaptive_alpha
+            net.layers{l}.lambda = net.layers{l}.lambda - alpha*grad;
+        else
+            net.layers{l}.lambda = net.layers{l}.lambda - opt.alpha*grad;
+        end
+    end
+    %%%%%%%%%%%%%%% update dropout rate in hidden layers 
 end
 
 end
