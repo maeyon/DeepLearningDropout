@@ -14,10 +14,9 @@ function nn = test_nn(opt,nn);
     if nargin < 2
         nn.layers = opt.layers;
 
-        nn.testErrors = zeros(opt.numEpochs,1);
-        nn.testErrorsDropout = zeros(opt.numEpochs,1);
-
-        nn.trainingErrors = zeros(opt.numEpochs,1);
+%         nn.testErrors = zeros(opt.numEpochs,1);
+%         nn.testErrorsDropout = zeros(opt.numEpochs,1);
+%         nn.trainingErrors = zeros(opt.numEpochs,1);
         nn = setup_nn(nn, train_x, train_y, opt);
     end
     

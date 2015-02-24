@@ -22,6 +22,7 @@ opt.adaptive = false;% this is NOT opt.adaptive_alpha
 opt.input_do_rate = 0.8; % Probability to set the mask 1 (use the variable)
 opt.hidden_do_rate = 0.5;% Probability to set the mask 1 (use the variable)
 % 'UOR'(uniformly optimized rate dropout), 
+% 'UORH'(uniformly optimized rate dropout for hidden layers), 
 % 'LOR'(layer-wise optimized rate dropout) 
 % 'FOR'(feature-wise optimized rate dropout) 
 
@@ -30,9 +31,11 @@ opt.Bayesian_do = [];%'UOR';%
 nn = test_nn(opt);
 toc;
 figure(1);hold off;plot(nn.testErrors)
+nn1 = nn;
+
 tic;
-opt.Bayesian_do = 'UOR';%
-nn = test_nn(opt,nn);
+opt.Bayesian_do = 'UORH';%
+nn = test_nn(opt,nn1);
 toc;
 figure(2);hold off;plot(nn.testErrors)
 
