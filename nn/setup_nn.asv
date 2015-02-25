@@ -4,7 +4,7 @@ function net = setup_nn(net, x , y, opt)
     net.nodeRanges = zeros(length(net.layers), 2);
     net.nodeRanges(1,:) = [1, numNodePrev];
     if isfield(opt, 'Bayesian_do')
-        if strcmp(opt.Bayesian_do, 'UOR') || strcmp(opt.Bayesian_do, 'UORH')  % 'UOR'(uniformly optimized rate dropout)
+        if strcmp(opt.Bayesian_do, 'UOR') % 'UOR'(uniformly optimized rate dropout)
             net.layers{1}.lambda = invsig(opt.input_do_rate); 
         elseif strcmp(opt.Bayesian_do, 'LOR') % 'LOR'(layer-wise optimized rate dropout)
             net.layers{1}.lambda = invsig(opt.input_do_rate);

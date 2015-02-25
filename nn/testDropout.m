@@ -7,13 +7,13 @@ addpath ../util;
 opt = initializeOptions();
 opt.alpha = 1;
 opt.adaptive_alpha = true;%false;%true;
-opt.alpha_a = 2e4;%50;%10;%1;
+opt.alpha_a = 3e4;%50;%10;%1;
 opt.alpha_b = 1e4;
 
 opt.batchSize = 10;
 opt.numEpochs = 201;
 opt.numTestEpochs = 1e4;%1e2;%
-opt.testerror_dropout = [];%'last';%
+opt.testerror_dropout = 'all';%'last';%
  
 opt.dropout = true;
 opt.gaussian = false;
@@ -26,11 +26,13 @@ opt.hidden_do_rate = 0.5;% Probability to set the mask 1 (use the variable)
 % 'LOR'(layer-wise optimized rate dropout) 
 % 'FOR'(feature-wise optimized rate dropout) 
 
+
+opt.testerror_dropout = 'all';%[];%
 tic;
 opt.Bayesian_do = [];%'UOR';%
 nn = test_nn(opt);
 toc;
-figure(1);hold off;plot(nn.testErrors)
+figure(1);hold off;plot(nn1.testErrors)
 nn1 = nn;
 
 tic;
@@ -39,6 +41,12 @@ nn = test_nn(opt,nn1);
 toc;
 figure(2);hold off;plot(nn.testErrors)
 
+% tic;
+% opt.Bayesian_do = 'UORH';%
+% opt.testerror_dropout = 'last';%[];%
+% nn2 = test_nn(opt,nn1);
+% toc;
+% figure(3);hold off;plot(nn.testErrors)
 
 if strcmp(opt.testerror, 'all') || strcmp(opt.testerror, 'last')
     testErrors = nn.testErrors;

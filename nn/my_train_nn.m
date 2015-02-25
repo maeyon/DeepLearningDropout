@@ -1,19 +1,19 @@
-function net = train_nn(net, x, y, test_x, test_y, opt)
+function net = my_train_nn(net, x, y, test_x, test_y, opt)
 
-    % Vectorize
-    if length(opt.input_do_rate) == 1
-        opt.input_do_rate = ones(opt.numEpochs, 1) * opt.input_do_rate;
-    end
-    if length(opt.hidden_do_rate) == 1
-        opt.hidden_do_rate = ones(opt.numEpochs, 1) * opt.hidden_do_rate;
-    end
-    
-    if length(opt.input_do_rate) ~= opt.numEpochs
-        error('Invalid input dropout rate');
-    end
-    if length(opt.hidden_do_rate) ~= opt.numEpochs
-        error('Invalid hidden dropout rate');
-    end
+%     % Vectorize
+%     if length(opt.input_do_rate) == 1
+%         opt.input_do_rate = ones(opt.numEpochs, 1) * opt.input_do_rate;
+%     end
+%     if length(opt.hidden_do_rate) == 1
+%         opt.hidden_do_rate = ones(opt.numEpochs, 1) * opt.hidden_do_rate;
+%     end
+%     
+%     if length(opt.input_do_rate) ~= opt.numEpochs
+%         error('Invalid input dropout rate');
+%     end
+%     if length(opt.hidden_do_rate) ~= opt.numEpochs
+%         error('Invalid hidden dropout rate');
+%     end
 
     if opt.sobol
         net.sobol = sobolset(net.nodeRanges(size(net.nodeRanges,1)-1, 2));
@@ -42,10 +42,10 @@ function net = train_nn(net, x, y, test_x, test_y, opt)
             batch_x = x(:, kk((l - 1) * opt.batchSize + 1 : l * opt.batchSize));
             batch_y = y(:, kk((l - 1) * opt.batchSize + 1 : l * opt.batchSize));
 
-            net = feedForward_nn(net, batch_x, opt);
-            net = backPropagation_nn(net, batch_y, opt);
-%             net = my_feedForward_nn(net, batch_x, opt);
-%             net = my_backPropagation_nn(net, batch_y, opt);
+%             net = feedForward_nn(net, batch_x, opt);
+%             net = backPropagation_nn(net, batch_y, opt);
+            net = my_feedForward_nn(net, batch_x, opt);
+            net = my_backPropagation_nn(net, batch_y, opt);
             net.iter = net.iter + 1;
             meanTrainingError = meanTrainingError + net.L;
         end
@@ -92,7 +92,8 @@ function net = train_nn(net, x, y, test_x, test_y, opt)
             end
         end
         if strcmp(opt.testerror, 'all')
-            [er, bad] = testerror(net, test_x, test_y, opt.regression);
+%             [er, bad] = testerror(net, test_x, test_y, opt.regression);
+            [er, bad] = my_testerror(net, test_x, test_y, opt);
             if isfield(net,'testErrors')
                 net.testErrors = [net.testErrors(:); er(:)];
             else
@@ -100,15 +101,21 @@ function net = train_nn(net, x, y, test_x, test_y, opt)
             end
         end
         if strcmp(opt.testerror_dropout, 'all')
-            if ~isfield(opt,'numTestEpochs')
-                opt.numTestEpochs=100;
-            end
-            [erd, badd] = testerror_dropout(net, test_x, test_y, opt.input_do_rate(i), opt.hidden_do_rate(i), opt.numTestEpochs, opt.regression);
+            [erd, badd] = testerror(net, test_x, test_y, opt.regression);
             if isfield(net,'testErrorsDropout')
                 net.testErrorsDropout = [net.testErrorsDropout(:); erd(:)];
             else
                 net.testErrorsDropout(i) = erd;
             end
+%             if ~isfield(opt,'numTestEpochs')
+%                 opt.numTestEpochs=100;
+%             end
+%             [erd, badd] = testerror_dropout(net, test_x, test_y, opt.input_do_rate(i), opt.hidden_do_rate(i), opt.numTestEpochs, opt.regression);
+%             if isfield(net,'testErrorsDropout')
+%                 net.testErrorsDropout = [net.testErrorsDropout(:); erd(:)];
+%             else
+%                 net.testErrorsDropout(i) = erd;
+%             end
         end
         if strcmp(opt.trainingerror, 'all')
             if isfield(net,'trainingErrors')

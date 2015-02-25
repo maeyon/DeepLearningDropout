@@ -62,10 +62,13 @@ if isfield(opt, 'Bayesian_do')
     grad = 0;
     if strcmp(opt.Bayesian_do, 'UOR')
         temp = sum(net.layers{1}.do,1) -  ido;
+        Nunits = size(net.layers{2}.w, 2);
         for l = 2:length(net.layers)-1
             temp = temp + sum(net.layers{l}.do,1) -  hdo{l};
+            Nunits = Nunits + net.layers{l}.n;
         end
-        grad = mean(temp.*negL) - net.delta*(ido.*(1-ido).*(log(1-ido)-log(ido)));
+        logratio = log(opt.input_do_rate) - log(1-opt.input_do_rate);
+        grad = mean(temp.*negL) - net.delta*(ido*(1-ido)*(log(1-ido)-log(ido)+logratio))*Nunits;
         if opt.adaptive_alpha
             net.layers{1}.lambda = net.layers{1}.lambda - alpha*grad;
         else
@@ -75,15 +78,25 @@ if isfield(opt, 'Bayesian_do')
             net.layers{l}.lambda = net.layers{1}.lambda;
         end
     elseif strcmp(opt.Bayesian_do, 'UORH')
-        grad = mean((sum(net.layers{1}.do,1) -  ido).*negL) - net.delta*(ido.*(1-ido).*(log(1-ido)-log(ido)));
+        logratio = log(opt.input_do_rate) - log(1-opt.input_do_rate);
+        grad = mean((sum(net.layers{1}.do,1) -  ido).*negL) ...
+            - net.delta*(ido*(1-ido)*(log(1-ido)-log(ido)+logratio))*size(net.layers{2}.w, 2);
         temp = 0;
+        Nunits = 0;
         for l = 2:length(net.layers)-1
             temp = temp + sum(net.layers{l}.do,1) -  hdo{l};
+            Nunits = Nunits + net.layers{l}.n;
         end
-        grad2 = mean(temp.*negL) - net.delta*( hdo{2}.*(1- hdo{2}).*(log(1- hdo{2})-log( hdo{2})));
+        logratio = log(opt.hidden_do_rate) - log(1-opt.hidden_do_rate);
+        grad2 = mean(temp.*negL) - net.delta*( hdo{2}*(1- hdo{2})...
+            *(log(1- hdo{2})-log(hdo{2}) + logratio))*Nunits;
+%         if epochNum > 243*400-1 && epochNum < 244*400
+%             fprintf('kita\n');
+%             dbstop at 97 in my_train_nn.m;
+%         end
         if opt.adaptive_alpha
-            net.layers{1}.lambda = net.layers{1}.lambda - alpha*grad;
-            net.layers{2}.lambda = net.layers{2}.lambda - alpha*grad2;
+            net.layers{1}.lambda = net.layers{1}.lambda - 1e-5*alpha*grad;
+            net.layers{2}.lambda = net.layers{2}.lambda - 1e-5*alpha*grad2;
         else
             net.layers{1}.lambda = net.layers{1}.lambda - opt.alpha*grad;
             net.layers{2}.lambda = net.layers{2}.lambda - opt.alpha*grad2;
