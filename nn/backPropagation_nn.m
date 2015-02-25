@@ -1,4 +1,5 @@
-function net = backPropagation_nn(net, y, opt, epochNum)
+function net = backPropagation_nn(net, y, opt)
+epochNum = net.iter;
 numLayers = length(net.layers);
 
 e = net.layers{numLayers}.a - y; % Total error

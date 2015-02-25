@@ -23,7 +23,12 @@ function [nn, nn_original] = test_nn(opt,nn);
 %     nn = setup_nn(nn, train_x, train_y(1,:));
 %     nn = train_nn(nn, train_x, train_y(1,:), test_x, test_y(1,:), opt);
     
-    nn_original = train_nn(nn, train_x, train_y, test_x, test_y, opt);
+    if nargout > 1
+        opt2 = opt;
+        opt2.testerror_dropout = [];%'all';%
+        nn_original = train_nn(nn, train_x, train_y, test_x, test_y, opt2);
+        rand('state',opt.randstate)
+    end
     nn = my_train_nn(nn, train_x, train_y, test_x, test_y, opt);
 
 end

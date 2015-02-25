@@ -42,7 +42,7 @@ function net = train_nn(net, x, y, test_x, test_y, opt)
             batch_x = x(:, kk((l - 1) * opt.batchSize + 1 : l * opt.batchSize));
             batch_y = y(:, kk((l - 1) * opt.batchSize + 1 : l * opt.batchSize));
 
-            net = feedForward_nn(net, batch_x, opt);
+            net = feedForward_nn(net, batch_x, opt, i);
             net = backPropagation_nn(net, batch_y, opt);
 %             net = my_feedForward_nn(net, batch_x, opt);
 %             net = my_backPropagation_nn(net, batch_y, opt);

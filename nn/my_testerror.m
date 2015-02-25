@@ -17,12 +17,12 @@ function [er, bad] = my_testerror(net, x, y, opt)
                 if strcmp(opt.Bayesian_do, 'UORH')
                     ido = sig(net.layers{1}.lambda);% opt.input_do_rate(epochNum);
                     hdo = sig(net.layers{2}.lambda);
-                    net = feedForward_test_nn(net, x, ido, hdo);
+                    net = feedForward_test_nn(net, x, ido, hdo, 1);
                 else
-                    net = feedForward_test_nn(net, x, opt.input_do_rate, opt.hidden_do_rate);
+                    net = feedForward_test_nn(net, x, opt.input_do_rate, opt.hidden_do_rate, 1);
                 end
             else
-                net = feedForward_test_nn(net, x, opt.input_do_rate, opt.hidden_do_rate);
+                net = feedForward_test_nn(net, x, opt.input_do_rate, opt.hidden_do_rate, 1);
             end
             h = (net.layers{end}.a > 0.5);
             bad = find(h ~= y);
@@ -32,12 +32,12 @@ function [er, bad] = my_testerror(net, x, y, opt)
                 if strcmp(opt.Bayesian_do, 'UORH')
                     ido = sig(net.layers{1}.lambda);% opt.input_do_rate(epochNum);
                     hdo = sig(net.layers{2}.lambda);
-                    net = feedForward_test_nn(net, x, ido, hdo);
+                    net = feedForward_test_nn(net, x, ido, hdo, 1);
                 else
-                    net = feedForward_test_nn(net, x, opt.input_do_rate, opt.hidden_do_rate);
+                    net = feedForward_test_nn(net, x, opt.input_do_rate, opt.hidden_do_rate, 1);
                 end
             else
-                net = feedForward_test_nn(net, x, opt.input_do_rate, opt.hidden_do_rate);
+                net = feedForward_test_nn(net, x, opt.input_do_rate, opt.hidden_do_rate, 1);
             end
             [~, h] = max(net.layers{end}.a, [], 1);
             [~, a] = max(y, [], 1);
