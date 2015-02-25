@@ -1,4 +1,4 @@
-function nn = test_nn(opt,nn);
+function [nn, nn_original] = test_nn(opt,nn);
 
     %%
     load(opt.dataset);
@@ -23,7 +23,7 @@ function nn = test_nn(opt,nn);
 %     nn = setup_nn(nn, train_x, train_y(1,:));
 %     nn = train_nn(nn, train_x, train_y(1,:), test_x, test_y(1,:), opt);
     
-%     nn = train_nn(nn, train_x, train_y, test_x, test_y, opt);
+    nn_original = train_nn(nn, train_x, train_y, test_x, test_y, opt);
     nn = my_train_nn(nn, train_x, train_y, test_x, test_y, opt);
 
 end
