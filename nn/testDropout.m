@@ -35,11 +35,84 @@ toc;
 figure(1);hold off;plot(nn1.testErrors)
 nn1 = nn;
 
+opt.numEpochs = 100;%2001;
 tic;
 opt.Bayesian_do = 'UORH';%
+opt.check_lambda = 'all';
+opt.testerror_dropout = [];%'all';%'last';%
+opt.adaptive_alpha_lambda = true;
+opt.alpha_lambda_a = 1e-3*opt.alpha_a;
+opt.alpha_lambda_b = opt.alpha_b;
 nn = test_nn(opt,nn1);
 toc;
 figure(2);hold off;plot(nn.testErrors)
+nn20 = nn;
+
+opt.numEpochs = 2001;
+tic;
+opt.Bayesian_do = 'UORH';%
+opt.testerror_dropout = [];%'all';%'last';%
+opt.adaptive_alpha_lambda = true;
+opt.alpha_lambda_a = 1e-3*opt.alpha_a;
+opt.alpha_lambda_b = opt.alpha_b;
+nn = test_nn(opt,nn1);
+toc;
+figure(2);hold off;plot(nn.testErrors)
+nn2 = nn;
+
+tic;
+opt.Bayesian_do = 'UORH';%
+opt.adaptive_alpha_lambda = true;
+opt.alpha_lambda_a = 3e-7*opt.alpha_a;
+opt.alpha_lambda_b = opt.alpha_b;
+nn = test_nn(opt,nn1);
+toc;
+figure(3);hold off;plot(nn.testErrors)
+nn3 = nn;
+
+tic;
+opt.Bayesian_do = 'UORH';%
+opt.adaptive_alpha_lambda = true;
+opt.alpha_lambda_a = 1e-6*opt.alpha_a;
+opt.alpha_lambda_b = opt.alpha_b;
+nn = test_nn(opt,nn1);
+toc;
+figure(4);hold off;plot(nn.testErrors)
+nn4 = nn;
+
+tic;
+opt.Bayesian_do = 'UORH';%
+opt.adaptive_alpha_lambda = true;
+opt.alpha_lambda_a = 3e-6*opt.alpha_a;
+opt.alpha_lambda_b = opt.alpha_b;
+nn = test_nn(opt,nn1);
+toc;
+figure(5);hold off;plot(nn.testErrors)
+nn5 = nn;
+
+% tic;
+% opt.Bayesian_do = 'UORH';%
+% opt.adaptive_alpha_lambda = true;
+% opt.alpha_lambda_a = 1e-5*opt.alpha_a;
+% opt.alpha_lambda_b = opt.alpha_b;
+% nn = test_nn(opt,nn1);
+% toc;
+% figure(6);hold off;plot(nn.testErrors)
+% nn6 = nn;
+
+tic;
+opt.Bayesian_do = [];%'UORH';%
+nn = test_nn(opt,nn1);
+toc;
+figure(6);hold off;plot(nn.testErrors)
+nn10 = nn;
+
+figure(7);hold off;plot(nn2.testErrors(201:end));
+hold on;plot(nn2.testErrors(201:end),'r');
+hold on;plot(nn3.testErrors(201:end),'k');
+hold on;plot(nn4.testErrors(201:end),'c');
+hold on;plot(nn5.testErrors(201:end),'g');
+hold on;plot(nn6.testErrors(201:end),'p');
 
 % tic;
 % opt.Bayesian_do = 'UORH';%

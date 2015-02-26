@@ -53,7 +53,8 @@ function net = my_train_nn(net, x, y, test_x, test_y, opt)
         
         if i == opt.numEpochs
             if strcmp(opt.testerror, 'last')
-                [er, bad] = testerror(net, test_x, test_y, opt.regression);
+%                 [er, bad] = testerror(net, test_x, test_y, opt.regression);
+                [er, bad] = my_testerror(net, test_x, test_y, opt);
                 if isfield(net,'testErrors')
                     if length(net.testErrors) > 0
                         net.testErrors = [net.testErrors(:); er(:)];
@@ -126,6 +127,11 @@ function net = my_train_nn(net, x, y, test_x, test_y, opt)
                 end
             else
                 net.trainingErrors(i) = meanTrainingError;
+            end
+        end
+        if strcmp(opt.check_lambda, 'all')
+            for l=1:length(net.layers)-1
+                net.layers{l}.lambda_history(i) = net.layers{l}.lambda;
             end
         end
     end

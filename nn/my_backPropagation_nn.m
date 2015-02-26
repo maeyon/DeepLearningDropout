@@ -60,31 +60,38 @@ if isfield(opt, 'Bayesian_do')
     
     %%%%%%%%%%%%%%% update dropout rate in input layer 
     grad = 0;
+    if ~isfield(opt,'adaptive_alpha_lambda')
+        opt.adaptive_alpha_lambda = false;
+    end
+    if ~isfield(opt,'alpha_lambda')
+        opt.alpha_lambda = opt.alpha;
+    end
     if strcmp(opt.Bayesian_do, 'UOR')
-        temp = sum(net.layers{1}.do,1) -  ido;
+        temp = sum(net.layers{1}.do- ido,1);
         Nunits = size(net.layers{2}.w, 2);
         for l = 2:length(net.layers)-1
-            temp = temp + sum(net.layers{l}.do,1) -  hdo{l};
+            temp = temp + sum(net.layers{l}.do-hdo{l},1) ;
             Nunits = Nunits + net.layers{l}.n;
         end
         logratio = log(opt.input_do_rate) - log(1-opt.input_do_rate);
         grad = mean(temp.*negL) - net.delta*(ido*(1-ido)*(log(1-ido)-log(ido)+logratio))*Nunits;
-        if opt.adaptive_alpha
-            net.layers{1}.lambda = net.layers{1}.lambda - alpha*grad;
+        if opt.adaptive_alpha_lambda
+            alpha_lambda = opt.alpha_lambda_a/(opt.alpha_lambda_b + epochNum);
+            net.layers{1}.lambda = net.layers{1}.lambda - alpha_lambda*grad;
         else
-            net.layers{1}.lambda = net.layers{1}.lambda - opt.alpha*grad;
+            net.layers{1}.lambda = net.layers{1}.lambda - opt.alpha_lambda*grad;
         end
         for l = 2:length(net.layers)-1
             net.layers{l}.lambda = net.layers{1}.lambda;
         end
     elseif strcmp(opt.Bayesian_do, 'UORH')
         logratio = log(opt.input_do_rate) - log(1-opt.input_do_rate);
-        grad = mean((sum(net.layers{1}.do,1) -  ido).*negL) ...
+        grad = mean((sum(net.layers{1}.do- ido,1) ).*negL) ...
             - net.delta*(ido*(1-ido)*(log(1-ido)-log(ido)+logratio))*size(net.layers{2}.w, 2);
         temp = 0;
         Nunits = 0;
         for l = 2:length(net.layers)-1
-            temp = temp + sum(net.layers{l}.do,1) -  hdo{l};
+            temp = temp + sum(net.layers{l}.do-hdo{l},1);
             Nunits = Nunits + net.layers{l}.n;
         end
         logratio = log(opt.hidden_do_rate) - log(1-opt.hidden_do_rate);
@@ -94,15 +101,36 @@ if isfield(opt, 'Bayesian_do')
 %             fprintf('kita\n');
 %             dbstop at 97 in my_train_nn.m;
 %         end
-        if opt.adaptive_alpha
-            net.layers{1}.lambda = net.layers{1}.lambda - 1e-5*alpha*grad;
-            net.layers{2}.lambda = net.layers{2}.lambda - 1e-5*alpha*grad2;
+        if opt.adaptive_alpha_lambda
+            alpha_lambda = opt.alpha_lambda_a/(opt.alpha_lambda_b + epochNum);
+            net.layers{1}.lambda = net.layers{1}.lambda - alpha_lambda*grad;% 1e-5
+            net.layers{2}.lambda = net.layers{2}.lambda - alpha_lambda*grad2;% 1e-5
         else
-            net.layers{1}.lambda = net.layers{1}.lambda - opt.alpha*grad;
-            net.layers{2}.lambda = net.layers{2}.lambda - opt.alpha*grad2;
+            net.layers{1}.lambda = net.layers{1}.lambda - opt.alpha_lambda*grad;
+            net.layers{2}.lambda = net.layers{2}.lambda - opt.alpha_lambda*grad2;
         end
         for l = 2:length(net.layers)-1
             net.layers{l}.lambda = net.layers{2}.lambda;
+        end
+    elseif strcmp(opt.Bayesian_do, 'LOR')
+        logratio = log(opt.input_do_rate) - log(1-opt.input_do_rate);
+        grad(1) = mean((sum(net.layers{1}.do-ido,1) ).*negL) ...
+            - net.delta*(ido*(1-ido)*(log(1-ido)-log(ido)+logratio))*size(net.layers{2}.w, 2);
+        logratio = log(opt.hidden_do_rate) - log(1-opt.hidden_do_rate);
+        for l = 2:length(net.layers)-1
+            grad(l) = mean(( sum(net.layers{l}.do -  hdo{l},1)).*negL) ...
+                - net.delta*( hdo{l}*(1- hdo{l})*(log(1- hdo{l})-log(hdo{l})+logratio))*net.layers{l}.n;
+        end
+
+        if opt.adaptive_alpha_lambda
+            alpha_lambda = opt.alpha_lambda_a/(opt.alpha_lambda_b + epochNum);
+            for l=1:length(net.layers)-1
+                net.layers{l}.lambda = net.layers{l}.lambda - alpha_lambda*grad(l);
+            end
+        else
+            for l=1:length(net.layers)-1
+                net.layers{l}.lambda = net.layers{l}.lambda - opt.alpha_lambda*grad(l);
+            end
         end
     end
     
