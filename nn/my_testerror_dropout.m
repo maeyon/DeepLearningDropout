@@ -1,4 +1,4 @@
-function [er, bad] = my_testerror_dropout(net, x, y, numTestEpochs, do_regression)
+function [er, bad, std_er] = my_testerror_dropout(net, x, y, numTestEpochs, do_regression)
     %  feedforward
     if ~exist('do_regression','var')
         do_regression=false;
@@ -10,7 +10,9 @@ function [er, bad] = my_testerror_dropout(net, x, y, numTestEpochs, do_regressio
     A = reshape(A, [s, numTestEpochs]);
     
     a = mean(A, 3);
-    
+    if nargout > 2
+        std_er = std(A,3);
+    end
 
     
     if do_regression

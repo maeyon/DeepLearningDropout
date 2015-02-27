@@ -15,6 +15,7 @@ function opt = initializeOptions()
   opt.boundedrandom = false;
   opt.dataset = '../data/gisette.mat';
   opt.regression = false; % 
+  opt.check_lambda = [];
     %../data/magic04.mat
     %../data/shuttle.mat
     %../data/letterrecognition.mat
