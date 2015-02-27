@@ -14,9 +14,9 @@ function net = my_feedForward_test_nn(net, x, opt)
                 net.layers{l}.a = sigmoid(bsxfun(@plus, net.layers{l}.w * net.layers{l - 1}.a.* hdo, net.layers{l}.b));
             else
                 if l == 2
-                    net.layers{l}.a = sigmoid(bsxfun(@plus, net.layers{l}.w * net.layers{l - 1}.a * input_do_rate, net.layers{l}.b));
+                    net.layers{l}.a = sigmoid(bsxfun(@plus, net.layers{l}.w * net.layers{l - 1}.a * opt.input_do_rate, net.layers{l}.b));
                 else
-                    net.layers{l}.a = sigmoid(bsxfun(@plus, net.layers{l}.w * net.layers{l - 1}.a * hidden_do_rate, net.layers{l}.b));
+                    net.layers{l}.a = sigmoid(bsxfun(@plus, net.layers{l}.w * net.layers{l - 1}.a * opt.hidden_do_rate, net.layers{l}.b));
                 end
             end
         else

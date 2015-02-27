@@ -28,11 +28,10 @@ opt.hidden_do_rate = 0.5;% Probability to set the mask 1 (use the variable)
 % 'LOR'(layer-wise optimized rate dropout) 
 % 'FOR'(feature-wise optimized rate dropout) 
 
-
-opt.testerror_dropout = 'all';%[];%
+opt.testerror_dropout = 'last';%'all';%[];%
 tic;
 opt.Bayesian_do = [];%'UOR';%
-[nn, nn_original] = test_nn(opt);
+nn = test_nn(opt);
 toc;
 figure(1);hold off;plot(nn1.testErrors)
 nn1 = nn;
