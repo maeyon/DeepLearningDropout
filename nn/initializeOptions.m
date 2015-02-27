@@ -16,6 +16,8 @@ function opt = initializeOptions()
   opt.dataset = '../data/gisette.mat';
   opt.regression = false; % 
   opt.check_lambda = [];
+  opt.Bayesian_do = [];
+  
     %../data/magic04.mat
     %../data/shuttle.mat
     %../data/letterrecognition.mat
