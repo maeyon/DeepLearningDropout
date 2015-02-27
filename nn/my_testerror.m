@@ -14,13 +14,7 @@ function [er, bad] = my_testerror(net, x, y, opt)
     else
         if size(net.layers{end}.a,1) == 1
             if isfield(opt,'Bayesian_do')
-                if strcmp(opt.Bayesian_do, 'UORH')
-                    ido = sig(net.layers{1}.lambda);% opt.input_do_rate(epochNum);
-                    hdo = sig(net.layers{2}.lambda);
-                    net = feedForward_test_nn(net, x, ido, hdo, opt.dropout);
-                else
-                    net = feedForward_test_nn(net, x, opt.input_do_rate, opt.hidden_do_rate, opt.dropout);
-                end
+                net = my_feedForward_test_nn(net, x, opt);
             else
                 net = feedForward_test_nn(net, x, opt.input_do_rate, opt.hidden_do_rate, opt.dropout);
             end
@@ -29,13 +23,7 @@ function [er, bad] = my_testerror(net, x, y, opt)
             er = numel(bad) / size(y, 2);
         else
             if isfield(opt,'Bayesian_do')
-                if strcmp(opt.Bayesian_do, 'UORH')
-                    ido = sig(net.layers{1}.lambda);% opt.input_do_rate(epochNum);
-                    hdo = sig(net.layers{2}.lambda);
-                    net = feedForward_test_nn(net, x, ido, hdo, opt.dropout);
-                else
-                    net = feedForward_test_nn(net, x, opt.input_do_rate, opt.hidden_do_rate, opt.dropout);
-                end
+                net = my_feedForward_test_nn(net, x, opt);
             else
                 net = feedForward_test_nn(net, x, opt.input_do_rate, opt.hidden_do_rate, opt.dropout);
             end

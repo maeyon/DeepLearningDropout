@@ -54,7 +54,7 @@ opt.numEpochs = 100;%2001;
 tic;
 opt.Bayesian_do = 'UORH';%
 opt.check_lambda = 'all';
-opt.testerror_dropout = [];%'all';%'last';%
+opt.testerror_dropout = 'last';%[];%'all';%
 opt.adaptive_alpha_lambda = true;
 opt.alpha_lambda_a = 1e-3*opt.alpha_a;
 opt.alpha_lambda_b = opt.alpha_b;
