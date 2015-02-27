@@ -56,11 +56,7 @@ function net = my_train_nn(net, x, y, test_x, test_y, opt)
 %                 [er, bad] = testerror(net, test_x, test_y, opt.regression);
                 [er, bad] = my_testerror(net, test_x, test_y, opt);
                 if isfield(net,'testErrors')
-                    if length(net.testErrors) > 0
-                        net.testErrors = [net.testErrors(:); er(:)];
-                    else
-                        net.testErrors = er;
-                    end
+                    net.testErrors = [net.testErrors(:); er(:)];
                 else
                     net.testErrors = er;
                 end
@@ -69,24 +65,21 @@ function net = my_train_nn(net, x, y, test_x, test_y, opt)
                 if ~isfield(opt,'numTestEpochs')
                     opt.numTestEpochs=100;
                 end
-                [erd, badd] = my_testerror_dropout(net, test_x, test_y, opt.numTestEpochs, opt.regression);
+                [erd, badd, std_erd] = my_testerror_dropout(net, test_x, test_y, opt.numTestEpochs, opt.regression);
                 if isfield(net,'testErrorsDropout')
-                    if length(net.testErrors) > 0
-                        net.testErrorsDropout = [net.testErrorsDropout(:); erd(:)];
-                    else
-                        net.testErrorsDropout = erd;
-                    end
+                    net.testErrorsDropout = [net.testErrorsDropout(:); erd(:)];
                 else
                     net.testErrorsDropout = erd;
+                end
+                if isfield(net,'testErrorsDropout_std')
+                    net.testErrorsDropout_std = [net.testErrorsDropout_std; std_erd];
+                else
+                    net.testErrorsDropout_std = std_erd;
                 end
             end
             if strcmp(opt.trainingerror, 'last')
                 if isfield(net,'trainingErrors')
-                    if length(net.trainingErrors) > 0
-                        net.trainingErrors = [net.trainingErrors(:); meanTrainingError(:)];
-                    else
-                        net.trainingErrors = meanTrainingError;
-                    end
+                    net.trainingErrors = [net.trainingErrors(:); meanTrainingError(:)];
                 else
                     net.trainingErrors = meanTrainingError;
                 end
@@ -121,11 +114,7 @@ function net = my_train_nn(net, x, y, test_x, test_y, opt)
         end
         if strcmp(opt.trainingerror, 'all')
             if isfield(net,'trainingErrors')
-                if length(net.trainingErrors) > 0
-                    net.trainingErrors = [net.trainingErrors(:); meanTrainingError(:)];
-                else
-                    net.trainingErrors = meanTrainingError;
-                end
+                net.trainingErrors = [net.trainingErrors(:); meanTrainingError(:)];
             else
                 net.trainingErrors(i) = meanTrainingError;
             end
