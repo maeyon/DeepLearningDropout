@@ -16,6 +16,7 @@ opt.numTestEpochs = 1e4;%1e2;%
 opt.testerror_dropout = [];%'all';%'last';%
  
 opt.dropout = dropout;%true;
+opt.testerror_dropout = 'last';%[];%'all';%
 opt.gaussian = false;
 opt.adaptive = false;% this is NOT opt.adaptive_alpha
 
