@@ -27,7 +27,7 @@ function net = setup_nn(net, x , y, opt)
             if strcmp(opt.Bayesian_do, 'UOR') || strcmp(opt.Bayesian_do, 'UORH')  % 'UOR'(uniformly optimized rate dropout)
                 net.layers{l}.lambda = invsig(opt.hidden_do_rate);
             elseif strcmp(opt.Bayesian_do, 'LOR') % 'LOR'(layer-wise optimized rate dropout)
-
+                net.layers{l}.lambda = invsig(opt.hidden_do_rate);
             elseif strcmp(opt.Bayesian_do, 'FOR') % 'FOR'(feature-wise optimized rate dropout)
                 net.layers{l}.lambda = opt.hidden_do_rate* numNodePrev ;
             else

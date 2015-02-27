@@ -39,6 +39,19 @@ nn1 = nn;
 
 opt.numEpochs = 100;%2001;
 tic;
+opt.Bayesian_do = 'LOR';%
+opt.check_lambda = 'all';
+opt.testerror_dropout = [];%'all';%'last';%
+opt.adaptive_alpha_lambda = true;
+opt.alpha_lambda_a = 1e-3*opt.alpha_a;
+opt.alpha_lambda_b = opt.alpha_b;
+nn = test_nn(opt);
+toc;
+figure(2);hold off;plot(nn.testErrors)
+nn20 = nn;
+
+opt.numEpochs = 100;%2001;
+tic;
 opt.Bayesian_do = 'UORH';%
 opt.check_lambda = 'all';
 opt.testerror_dropout = [];%'all';%'last';%

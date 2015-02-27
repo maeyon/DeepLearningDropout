@@ -11,7 +11,7 @@ function [nn, nn_original] = test_nn(opt,nn);
     end
     rand('state',opt.randstate)
 
-    if nargin < 2
+    if nargout < 2
         nn.layers = opt.layers;
 
 %         nn.testErrors = zeros(opt.numEpochs,1);

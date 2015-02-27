@@ -2,9 +2,11 @@ function net = my_feedForward_nn(net, x, opt)
 
   numLayers = length(net.layers); % total number of layers
   net.layers{1}.a = x;
-  ido = sig(net.layers{1}.lambda);% opt.input_do_rate(epochNum);
-  for l = 2:length(net.layers)-1
-      hdo{l} = sig(net.layers{l}.lambda);%opt.hidden_do_rate(epochNum);
+  if opt.dropout
+      ido = sig(net.layers{1}.lambda);% opt.input_do_rate(epochNum);
+      for l = 2:length(net.layers)-1
+          hdo{l} = sig(net.layers{l}.lambda);%opt.hidden_do_rate(epochNum);
+      end
   end
   if opt.gaussian
       noiseRate = 1-opt.noiseScale*(1-ido); %Scale noise from dropout rate.

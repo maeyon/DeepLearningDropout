@@ -52,7 +52,8 @@ else
     end
 end
 
-if isfield(opt, 'Bayesian_do')
+%%%%%%%%%%%%%%%%% Update dropout rate
+if isfield(opt, 'Bayesian_do') && opt.dropout
     ido = sig(net.layers{1}.lambda);% opt.input_do_rate(epochNum);
     for l = 2:length(net.layers)-1
         hdo{l} = sig(net.layers{l}.lambda);%opt.hidden_do_rate(epochNum);
