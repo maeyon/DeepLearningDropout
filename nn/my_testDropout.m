@@ -12,11 +12,11 @@ opt.alpha_b = alpha_b;%1e4;
 
 opt.batchSize = batchSize;
 opt.numEpochs = numEpochs;
-opt.numTestEpochs = 1e4;%1e2;%
-opt.testerror_dropout = [];%'all';%'last';%
- 
+
 opt.dropout = dropout;%true;
-opt.testerror_dropout = 'last';%[];%'all';%
+opt.testerror_dropout = 'last';%[];%'last';%[];%'all';%
+opt.numTestEpochs = 1e4;%e3;%1e2;%
+
 opt.gaussian = false;
 opt.adaptive = false;% this is NOT opt.adaptive_alpha
 

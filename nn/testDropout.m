@@ -29,6 +29,7 @@ opt.hidden_do_rate = 0.5;% Probability to set the mask 1 (use the variable)
 % 'FOR'(feature-wise optimized rate dropout) 
 
 opt.testerror_dropout = 'last';%'all';%[];%
+opt.check_lambda = 'all';
 tic;
 opt.Bayesian_do = [];%'UOR';%
 nn = test_nn(opt);
@@ -57,7 +58,7 @@ opt.testerror_dropout = 'last';%[];%'all';%
 opt.adaptive_alpha_lambda = true;
 opt.alpha_lambda_a = 1e-3*opt.alpha_a;
 opt.alpha_lambda_b = opt.alpha_b;
-nn = test_nn(opt,nn1);
+nn = test_nn(opt,nn3);
 toc;
 figure(2);hold off;plot(nn.testErrors)
 nn20 = nn;

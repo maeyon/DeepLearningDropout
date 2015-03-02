@@ -11,7 +11,7 @@ opt.adaptive_alpha_lambda = true;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 opt.adaptive_alpha = true;%false;%true;
-opt.alpha_a = 1e4;%50;%10;%1;
+opt.alpha_a = 2e4;%50;%10;%1;
 opt.alpha_b = 1e4;
  
 opt.dropout = true;
@@ -32,7 +32,6 @@ name = 'nn_gisette';
 opt.batchSize = 10;
 opt.numEpochs = 2e3;%1e2;%
 
-
 %%%%%%%%%%%%%%% Without Droput
 opt.alpha_lambda_b = 1; 
 opt.alpha_lambda_a = 1;
@@ -45,14 +44,13 @@ pause(0.1);
 
 %%%%%%%%%%%%%%% With Droput
 opt.dropout = true; 
-opt.Bayesian_do = [];%
 command = sprintf('echo ''matlab -nojvm -r "my_testDropout(''\\''''%s''\\'''',%d,%d,%f,%f,%d,%f,%f,''\\''''%s''\\'''',%f,%f,''\\''''%s''\\'''');quit;"''| qsub -lnodes=1:ppn=2', ...
     name,opt.batchSize, opt.numEpochs, opt.alpha_a, opt.alpha_b, opt.dropout, opt.input_do_rate, opt.hidden_do_rate, ...
     opt.Bayesian_do, opt.alpha_lambda_a, opt.alpha_lambda_b, opt.check_lambda);
 unix(command);
 pause(0.1);
 
-%%
+
 for rate = [1e-1 3e-2 1e-2 3e-3]%[1e-1 3e-2 1e-2 3e-3 1e-3]
 %     for b = [1e2 1e3 1e4]
 %         k=1;
@@ -61,6 +59,13 @@ for rate = [1e-1 3e-2 1e-2 3e-3]%[1e-1 3e-2 1e-2 3e-3 1e-3]
 
     %%%%%%%%%%%%%%% With Droput
     opt.dropout = true;
+    opt.Bayesian_do = 'UOR';%
+    command = sprintf('echo ''matlab -nojvm -r "my_testDropout(''\\''''%s''\\'''',%d,%d,%f,%f,%d,%f,%f,''\\''''%s''\\'''',%f,%f,''\\''''%s''\\'''');quit;"''| qsub -lnodes=1:ppn=2', ...
+        name,opt.batchSize, opt.numEpochs, opt.alpha_a, opt.alpha_b, opt.dropout, opt.input_do_rate, opt.hidden_do_rate, ...
+        opt.Bayesian_do, opt.alpha_lambda_a, opt.alpha_lambda_b, opt.check_lambda);
+    unix(command);
+    pause(0.1);
+    %%%%%%%%%%%%%%%
     opt.Bayesian_do = 'UORH';%
     command = sprintf('echo ''matlab -nojvm -r "my_testDropout(''\\''''%s''\\'''',%d,%d,%f,%f,%d,%f,%f,''\\''''%s''\\'''',%f,%f,''\\''''%s''\\'''');quit;"''| qsub -lnodes=1:ppn=2', ...
         name,opt.batchSize, opt.numEpochs, opt.alpha_a, opt.alpha_b, opt.dropout, opt.input_do_rate, opt.hidden_do_rate, ...
@@ -82,7 +87,7 @@ end
 name = 'nn_gisette';
 opt.batchSize = 10;
 opt.numEpochs = 2e3;%1e2;%
-
+opt.Bayesian_do = [];%
 
 %%%%%%%%%%%%%%% Without Droput
 opt.alpha_lambda_b = 1; 
@@ -98,7 +103,6 @@ end
 
 %%%%%%%%%%%%%%% With Droput
 opt.dropout = true; 
-opt.Bayesian_do = [];%
 filename = filename_writer_nn(name, opt);
 filepath = ['/home/ichi/work/Boltzman/Bayesin dropout/DeepLearningDropout/nn/files/'];
 load([filepath,filename]);
@@ -108,11 +112,11 @@ for l=1:length(nn.layers)-1
 end
 
 i=1;
-for rate = [1e-1 3e-2 1e-2 3e-3 1e-4]
+for rate = [1e-1 3e-2 1e-2 3e-3 1e-3]
 %     for b = [1e2 1e3 1e4]
 %         k=1;
         opt.alpha_lambda_b = opt.alpha_b;
-        opt.alpha_lambda_a = b*rate;
+        opt.alpha_lambda_a = opt.alpha_b*rate;
         
         %%%%%%%%%%%%%%% With Droput
         opt.dropout = true; 
