@@ -11,7 +11,7 @@ function [er, bad, std_er] = my_testerror_dropout(net, x, y, numTestEpochs, do_r
     
     a = mean(A, 3);
     if nargout > 2
-        std_er = std(A,3);
+        std_er = std(A,0,3);
     end
 
     

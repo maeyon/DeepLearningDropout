@@ -7,10 +7,10 @@ function net = my_feedForward_test_nn(net, x, opt)
 	for l = 2:numLayers
         if opt.dropout
             if strcmp(opt.Bayesian_do, 'UOR') || strcmp(opt.Bayesian_do, 'UORH') || strcmp(opt.Bayesian_do, 'LOR')
-                hdo = sig(net.layers{l}.lambda);
+                hdo = sig(net.layers{l-1}.lambda);
                 net.layers{l}.a = sigmoid(bsxfun(@plus, net.layers{l}.w * net.layers{l - 1}.a * hdo, net.layers{l}.b));
             elseif strcmp(opt.Bayesian_do, 'FOR')
-                hdo = sig(net.layers{l}.lambda);
+                hdo = sig(net.layers{l-1}.lambda);
                 net.layers{l}.a = sigmoid(bsxfun(@plus, net.layers{l}.w * net.layers{l - 1}.a.* hdo, net.layers{l}.b));
             else
                 if l == 2
